@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Movie } from '../types/movie';
 
 export interface FetchParams{
@@ -11,22 +11,20 @@ export interface FetchParams{
 export interface HttpResponse {
     page: number,
     results: Movie[],
-    total_pages: number,
-    total_results: number
+    total_results: number,
+    total_pages: number
 }
-export async function fetchMovies({ query, page = 1, include_adult = false, language = 'en-US' }: FetchParams ): Promise<AxiosResponse <HttpResponse>> {
+export async function fetchMovies({ query, page }: FetchParams ): Promise <HttpResponse> {
     const token = import.meta.env.VITE_TMDB_TOKEN 
     const response = await axios.get<HttpResponse>(`https://api.themoviedb.org/3/search/movie`, {
         params: {
             query,
             page,
-            include_adult, 
-            language
         } ,
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${token}`
         }
     })
-    return response
+    return response.data
 }
